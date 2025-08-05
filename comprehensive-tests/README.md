@@ -22,13 +22,13 @@ The venture-profile-api has been migrated from direct endpoints to Edge Front Do
 
 ```bash
 # Test dev environment with 30 requests per endpoint
-python test_gateway_latency.py --environment dev
+uv run test_gateway_latency.py --environment dev
 
 # Test prod environment with 100 requests for more accuracy
-python test_gateway_latency.py --environment prod --requests 100
+uv run test_gateway_latency.py --environment prod --requests 100
 
 # Save detailed results to a JSON file
-python test_gateway_latency.py --environment test --requests 50 --output latency_results.json
+uv run test_gateway_latency.py --environment test --requests 50 --output latency_results.json
 ```
 
 ### Prerequisites
@@ -94,7 +94,7 @@ You can also run this as part of your CI/CD pipeline to monitor latency over tim
 
 ```bash
 # Run and save results with timestamp
-python test_gateway_latency.py \
+uv run test_gateway_latency.py \
   --environment prod \
   --requests 50 \
   --output "latency_$(date +%Y%m%d_%H%M%S).json"

@@ -90,10 +90,10 @@ new_urls = {
 ### Installation
 ```bash
 # Install dependencies
-pip install -r requirements.txt
+uv sync
 
-# Or using the project setup
-pip install -e .
+# Or install with all dependency groups
+uv sync --group auth --group dev
 ```
 
 ### Authentication (Optional)

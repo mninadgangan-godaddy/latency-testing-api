@@ -26,7 +26,13 @@ git clone https://github.com/your-org/edge-front-door-latency-testing.git
 cd edge-front-door-latency-testing
 
 # Install dependencies
-pip install -r requirements.txt
+uv sync
+
+# Install with optional auth dependencies (if needed for AWS)
+uv sync --group auth
+
+# Install with development dependencies (for testing/linting)
+uv sync --group dev
 
 # Make scripts executable
 chmod +x *.sh *.py
@@ -36,12 +42,12 @@ chmod +x *.sh *.py
 
 ### 1. Simple Health Check Test (No Auth Required)
 ```bash
-python quick_latency_test.py
+uv run quick_latency_test.py
 ```
 
 ### 2. Enhanced Multi-Endpoint Test (Auth Required)
 ```bash
-python enhanced_latency_test.py --environment prod --requests 20
+uv run enhanced_latency_test.py --environment prod --requests 20
 ```
 
 ### 3. Comprehensive Test Suite
@@ -53,13 +59,13 @@ python enhanced_latency_test.py --environment prod --requests 20
 
 ### CSV Reports (for Excel/Google Sheets)
 ```bash
-python generate_csv_report.py
+uv run generate_csv_report.py
 # Creates reports/ directory with multiple CSV files
 ```
 
 ### Excel Reports (formatted workbook)
 ```bash
-python generate_excel_report.py
+uv run generate_excel_report.py
 # Creates latency_analysis_report.xlsx
 ```
 
@@ -216,4 +222,4 @@ This toolkit has been successfully used to:
 - ✅ Generate stakeholder reports for migration decisions
 - ✅ Prevent performance regressions in production
 
-**Ready to test your gateway performance?** Start with `python quick_latency_test.py`!
+**Ready to test your gateway performance?** Start with `uv run quick_latency_test.py`!
