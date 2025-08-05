@@ -34,7 +34,7 @@ class CustomEndpointTest:
         
         self.new_urls = {
             "dev": "https://venture-profile-api.frontdoor.dev-godaddy.com",
-            "test": "https://venture-profile-api.frontdoor.stage-godaddy.com",
+            "test": "https://venture-profile-api.frontdoor.test-godaddy.com",  # Updated test domain
             "prod": "https://venture-profile-api.frontdoor.godaddy.com"
         }
         
@@ -49,7 +49,7 @@ class CustomEndpointTest:
         """Measure latency for a single request."""
         headers = {}
         if self.auth_token and self.auth_token.strip():
-            headers["Authorization"] = f"Bearer {self.auth_token}"
+            headers["Authorization"] = f"sso-jwt {self.auth_token}"
         
         start_time = time.time()
         try:

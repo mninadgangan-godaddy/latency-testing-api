@@ -14,8 +14,7 @@ This project is organized into 2 main directories:
 - [Documentation](simple-health-check/README.md)
 
 ```bash
-cd simple-health-check
-python test_health_check.py --environment dev --requests 50
+uv run simple-health-check/test_health_check.py --environment dev --requests 50
 ```
 
 ### 🔧 `custom-endpoints/`
@@ -26,28 +25,21 @@ python test_health_check.py --environment dev --requests 50
 - [Documentation](custom-endpoints/README.md)
 
 ```bash
-cd custom-endpoints
-python test_custom_endpoints.py --customer-id 12345 --venture-id abcdef --environment dev
+uv run custom-endpoints/test_custom_endpoints.py --customer-id 12345 --venture-id abcdef --environment dev
 ```
 
 ## Quick Start
 
 ### Option 1: Simple Health Check
 ```bash
-# Navigate to simple health check directory
-cd simple-health-check
-
-# Run basic health check test
-python test_health_check.py --environment dev
+# Run from project root
+uv run simple-health-check/test_health_check.py --environment dev
 ```
 
 ### Option 2: Custom Endpoints
 ```bash
-# Navigate to custom endpoints directory  
-cd custom-endpoints
-
-# Run test with your customer/venture IDs
-python test_custom_endpoints.py \
+# Run from project root with your customer/venture IDs
+uv run custom-endpoints/test_custom_endpoints.py \
   --customer-id your-customer-id \
   --venture-id your-venture-id \
   --environment dev \
@@ -82,6 +74,8 @@ Both tools provide detailed latency analysis including:
 For endpoints requiring authentication, set the `AUTH_TOKEN` environment variable:
 
 ```bash
-export AUTH_TOKEN="your-bearer-token"
+export AUTH_TOKEN="your-sso-jwt-token"
 # Then run your tests
 ```
+
+The tools will automatically add the token as `Authorization: sso-jwt {token}` header.

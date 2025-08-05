@@ -4,15 +4,23 @@ Simple tool for comparing latency between old direct endpoints and new Edge Fron
 
 ## Usage
 
+**Run from project root using `uv run`:**
+
 ```bash
 # Basic health check test
-python test_health_check.py --environment dev
+uv run simple-health-check/test_health_check.py --environment dev
 
 # Test with more requests
-python test_health_check.py --environment dev --requests 50
+uv run simple-health-check/test_health_check.py --environment dev --requests 50
 
 # Test production environment
-python test_health_check.py --environment prod --requests 100
+uv run simple-health-check/test_health_check.py --environment prod --requests 100
+```
+
+**Alternative - if dependencies are installed:**
+```bash
+cd simple-health-check
+python test_health_check.py --environment dev
 ```
 
 ## Arguments
@@ -44,4 +52,13 @@ P99        234.88       225.58       -9.31           -4.0      %
 📊 Summary: Gateway is 1.50ms faster on average
 ```
 
-This tool requires no authentication and is perfect for quick health check comparisons.
+## Authentication
+
+For environments requiring authentication, set the `AUTH_TOKEN` environment variable:
+
+```bash
+export AUTH_TOKEN="your-sso-jwt-token"
+uv run simple-health-check/test_health_check.py --environment test
+```
+
+The tool will automatically add the token as `Authorization: sso-jwt {token}` header.

@@ -12,6 +12,7 @@ import asyncio
 import statistics
 import time
 import argparse
+import os
 import httpx
 
 
@@ -20,6 +21,7 @@ class SimpleHealthCheckTest:
     
     def __init__(self, environment: str):
         self.environment = environment
+        self.auth_token = os.getenv('AUTH_TOKEN', '')
         
         # URL mappings for different environments
         self.old_urls = {
@@ -30,19 +32,30 @@ class SimpleHealthCheckTest:
         
         self.new_urls = {
             "dev": "https://venture-profile-api.frontdoor.dev-godaddy.com",
-            "test": "https://venture-profile-api.frontdoor.stage-godaddy.com",
+            "test": "https://venture-profile-api.frontdoor.test-godaddy.com",  # Updated test domain
             "prod": "https://venture-profile-api.frontdoor.godaddy.com"
         }
     
     async def measure_latency(self, url: str) -> float:
         """Measure latency for a single request."""
+        headers = {}
+        if self.auth_token and self.auth_token.strip():
+            headers["Authorization"] = f"sso-jwt {self.auth_token}"
+            
         start_time = time.time()
         try:
             async with httpx.AsyncClient(timeout=10.0) as client:
-                response = await client.get(url)
+                response = await client.get(url, headers=headers)
                 end_time = time.time()
+                
+                # Check if request was successful
+                if response.status_code >= 400:
+                    print(f"  Warning: {url} returned status {response.status_code}")
+                    return None
+                    
                 return (end_time - start_time) * 1000  # Convert to milliseconds
-        except Exception:
+        except Exception as e:
+            print(f"  Error requesting {url}: {e}")
             return None
     
     async def run_test(self, num_requests: int) -> dict:
@@ -54,6 +67,27 @@ class SimpleHealthCheckTest:
         print(f"Old endpoint: {old_url}")
         print(f"New endpoint: {new_url}")
         print(f"Running {num_requests} requests to each endpoint...")
+        
+        if self.auth_token:
+            print("Using AUTH_TOKEN for authentication")
+        else:
+            print("Running without authentication (set AUTH_TOKEN env var if needed)")
+        
+        # Quick connectivity test
+        print("\nTesting connectivity...")
+        test_old = await self.measure_latency(old_url)
+        test_new = await self.measure_latency(new_url)
+        
+        if test_old is None and test_new is None:
+            print("❌ Both endpoints appear to be unreachable or require authentication")
+            print("💡 Try running with AUTH_TOKEN environment variable if authentication is required")
+        elif test_old is None:
+            print("⚠️  Old endpoint appears to be unreachable")
+        elif test_new is None:
+            print("⚠️  New endpoint appears to be unreachable")
+        else:
+            print("✅ Both endpoints are reachable")
+        print()
         
         # Test old endpoint
         print("Testing old endpoint...")

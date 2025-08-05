@@ -4,18 +4,26 @@ Advanced tool for testing custom business endpoints with configurable customer a
 
 ## Usage
 
+**Run from project root using `uv run`:**
+
 ```bash
 # Basic test with customer and venture IDs
-python test_custom_endpoints.py --customer-id 12345 --venture-id abcdef --environment dev
+uv run custom-endpoints/test_custom_endpoints.py --customer-id 12345 --venture-id abcdef --environment dev
 
 # Test with authentication
-AUTH_TOKEN="your-token-here" python test_custom_endpoints.py --customer-id 12345 --venture-id abcdef --environment prod
+AUTH_TOKEN="your-token-here" uv run custom-endpoints/test_custom_endpoints.py --customer-id 12345 --venture-id abcdef --environment prod
 
 # Test with more requests
-python test_custom_endpoints.py --customer-id 12345 --venture-id abcdef --environment dev --requests 50
+uv run custom-endpoints/test_custom_endpoints.py --customer-id 12345 --venture-id abcdef --environment dev --requests 50
 
 # Test custom endpoints
-python test_custom_endpoints.py --customer-id 12345 --venture-id abcdef --environment dev --endpoints "/v1/customer/{customer_id}/venture/{venture_id}/custom-endpoint"
+uv run custom-endpoints/test_custom_endpoints.py --customer-id 12345 --venture-id abcdef --environment dev --endpoints "/v1/customer/{customer_id}/venture/{venture_id}/custom-endpoint"
+```
+
+**Alternative - if dependencies are installed:**
+```bash
+cd custom-endpoints
+python test_custom_endpoints.py --customer-id 12345 --venture-id abcdef --environment dev
 ```
 
 ## Arguments
@@ -31,9 +39,11 @@ python test_custom_endpoints.py --customer-id 12345 --venture-id abcdef --enviro
 Set the `AUTH_TOKEN` environment variable to test authenticated endpoints:
 
 ```bash
-export AUTH_TOKEN="your-bearer-token"
-python test_custom_endpoints.py --customer-id 12345 --venture-id abcdef
+export AUTH_TOKEN="your-sso-jwt-token"
+uv run custom-endpoints/test_custom_endpoints.py --customer-id 12345 --venture-id abcdef
 ```
+
+The tool will automatically add the token as `Authorization: sso-jwt {token}` header.
 
 ## Default Endpoints Tested
 
